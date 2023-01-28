@@ -28,6 +28,8 @@ public class Spot {
         this.parkingLot = parkingLot;
     }
 
+    public Spot() {
+    }
 
     public int getId() {
         return id;

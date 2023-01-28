@@ -21,11 +21,10 @@ public class Reservation {
     @OneToOne
     private Payment payment;
 
-    public Reservation(int numberOfHours, User user, Spot spot, Payment payment) {
+    public Reservation(int numberOfHours, User user, Spot spot) {
         this.numberOfHours = numberOfHours;
         this.user = user;
         this.spot = spot;
-        this.payment = payment;
     }
 
     public Reservation() {

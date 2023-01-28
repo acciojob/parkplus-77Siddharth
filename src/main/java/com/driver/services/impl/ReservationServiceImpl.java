@@ -9,6 +9,8 @@ import com.driver.services.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ReservationServiceImpl implements ReservationService {
     @Autowired
@@ -23,7 +25,22 @@ public class ReservationServiceImpl implements ReservationService {
     public Reservation reserveSpot(Integer userId, Integer parkingLotId, Integer timeInHours, Integer numberOfWheels) throws Exception {
 
         User foundUser = userRepository3.findById(userId).get();
+        if (foundUser == null) throw new Exception("Cannot make reservation");
         ParkingLot foundParking = parkingLotRepository3.findById(parkingLotId).get();
+        if (foundParking == null) throw new Exception("Cannot make reservation");
+
+        Spot foundSpot = null;
+        int minPrice = Integer.MAX_VALUE;
+        for (Spot sp:foundParking.getSpotList()){
+            if (!sp.getOccupied()){
+                int price = sp.getPricePerHour();
+                if (price < minPrice ){
+                    minPrice = price;
+                    foundSpot = sp;
+                }
+            }
+        }
+        if (foundSpot == null) throw new Exception("Cannot make reservation");
 
         //Reserve a spot in the given parkingLot such that the total price is minimum.
         //Note that the price per hour for each spot is different
@@ -31,8 +48,14 @@ public class ReservationServiceImpl implements ReservationService {
         //If parkingLot is not found, user is not found, or no spot is available, throw "Cannot make reservation" exception.
 
 
-        Reservation newReserveSpot = null;
-
+        Reservation newReserveSpot = new Reservation(timeInHours, foundUser, foundSpot);
+        foundSpot.setOccupied(true);
+        List<Reservation> reservationList = foundUser.getReservationList();
+        reservationList.add(newReserveSpot);
+        foundUser.setReservationList(reservationList);
+        userRepository3.save(foundUser);
+        spotRepository3.save(foundSpot);
+        reservationRepository3.save(newReserveSpot);
 
         return newReserveSpot;
 

@@ -36,6 +36,7 @@ public class ParkingLotController {
     @DeleteMapping("/spot/{spotId}/delete")
     public ResponseEntity<Void> deleteSpot(@PathVariable int spotId) {
         //delete a spot from given parking lot
+        parkingLotService.deleteSpot(spotId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -49,6 +50,7 @@ public class ParkingLotController {
     @DeleteMapping("/{parkingLotId}/delete")
     public ResponseEntity<Void> deleteParkingLot(@PathVariable int parkingLotId) {
         //delete a parkingLot
+        parkingLotService.deleteParkingLot(parkingLotId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
