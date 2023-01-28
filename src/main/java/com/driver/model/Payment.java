@@ -29,6 +29,9 @@ public class Payment {
         this.id = id;
     }
 
+    public Boolean isPaymentCompleted() {
+        return getPaymentCompleted();
+    }
     public Boolean getPaymentCompleted() {
         return paymentCompleted;
     }
